@@ -64,8 +64,7 @@ function App() {
 
         const q = query(
             collection(db, 'tasks'),
-            where('uid', '==', user.uid),
-            orderBy('createdAt', 'desc')
+            where('uid', '==', user.uid)
         );
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -73,6 +72,12 @@ function App() {
                 id: doc.id,
                 ...doc.data()
             }));
+            // Sort by createdAt descending (newest first)
+            tasksData.sort((a, b) => {
+                const dateA = a.createdAt?.seconds || 0;
+                const dateB = b.createdAt?.seconds || 0;
+                return dateB - dateA;
+            });
             setTasks(tasksData);
         });
 
@@ -80,14 +85,42 @@ function App() {
     }, [user]);
 
     const addTask = async (text, category) => {
-        if (!user) return;
-        await addDoc(collection(db, 'tasks'), {
-            text,
-            category,
-            completed: false,
-            uid: user.uid,
-            createdAt: serverTimestamp()
-        });
+        if (!user) {
+            console.error('No user logged in');
+            return;
+        }
+        try {
+            console.log('Adding task:', { text, category, uid: user.uid });
+            await addDoc(collection(db, 'tasks'), {
+                text,
+                description: '',
+                category,
+                completed: false,
+                status: 'pending',
+                priority: 'medium',
+                dueDate: null,
+                uid: user.uid,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            });
+            console.log('Task added successfully');
+        } catch (error) {
+            console.error('Error adding task:', error);
+            alert('Failed to add task: ' + error.message);
+        }
+    };
+
+    const updateTask = async (id, updates) => {
+        try {
+            await updateDoc(doc(db, 'tasks', id), {
+                ...updates,
+                updatedAt: serverTimestamp()
+            });
+            console.log('Task updated successfully');
+        } catch (error) {
+            console.error('Error updating task:', error);
+            alert('Failed to update task: ' + error.message);
+        }
     };
 
     const toggleTask = async (id) => {
@@ -167,6 +200,7 @@ function App() {
                 tasks={tasks}
                 onToggle={toggleTask}
                 onDelete={deleteTask}
+                onUpdate={updateTask}
             />
 
             <footer style={{ textAlign: 'center', marginTop: '4rem', color: '#9ca3af', fontSize: '0.875rem' }}>

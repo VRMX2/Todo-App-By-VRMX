@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import TaskItem from './TaskItem';
+import { motion, AnimatePresence } from 'framer-motion';
 
-export default function TaskList({ tasks, onToggle, onDelete }) {
+export default function TaskList({ tasks, onToggle, onDelete, onUpdate }) {
     const [filter, setFilter] = useState('all');
 
     const filteredTasks = tasks.filter(task => {
@@ -26,29 +27,39 @@ export default function TaskList({ tasks, onToggle, onDelete }) {
                         onClick={() => setFilter(f)}
                     >
                         {f.charAt(0).toUpperCase() + f.slice(1)}
-                        <span style={{ marginLeft: '0.25rem', opacity: 0.7 }}>
-                            ({getCount(f)})
+                        <span style={{ marginLeft: '0.5rem', opacity: 0.7, fontSize: '0.8rem' }}>
+                            {getCount(f)}
                         </span>
                     </button>
                 ))}
             </div>
 
-            <div className="task-list">
-                {filteredTasks.length === 0 ? (
-                    <div style={{ textAlign: 'center', color: '#6b7280', padding: '2rem' }}>
-                        No tasks found
-                    </div>
-                ) : (
-                    filteredTasks.map(task => (
-                        <TaskItem
-                            key={task.id}
-                            task={task}
-                            onToggle={onToggle}
-                            onDelete={onDelete}
-                        />
-                    ))
-                )}
-            </div>
+            <motion.div
+                className="task-list"
+                layout
+            >
+                <AnimatePresence mode='popLayout'>
+                    {filteredTasks.length === 0 ? (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '3rem' }}
+                        >
+                            No tasks found in this view
+                        </motion.div>
+                    ) : (
+                        filteredTasks.map(task => (
+                            <TaskItem
+                                key={task.id}
+                                task={task}
+                                onToggle={onToggle}
+                                onDelete={onDelete}
+                                onUpdate={onUpdate}
+                            />
+                        ))
+                    )}
+                </AnimatePresence>
+            </motion.div>
         </div>
     );
 }
