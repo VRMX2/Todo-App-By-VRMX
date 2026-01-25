@@ -4,7 +4,8 @@ import {
     signInWithPopup,
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail
 } from 'firebase/auth';
 import { motion } from 'framer-motion';
 
@@ -12,7 +13,9 @@ export default function Auth() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLogin, setIsLogin] = useState(true);
+    const [isReset, setIsReset] = useState(false);
     const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
 
     const handleGoogleLogin = async () => {
         try {
@@ -25,14 +28,20 @@ export default function Auth() {
 
     const handleEmailAuth = async (e) => {
         e.preventDefault();
+        setError('');
+        setMessage('');
         try {
-            if (isLogin) {
+            if (isReset) {
+                await sendPasswordResetEmail(auth, email);
+                setMessage('Password reset email sent! Check your inbox.');
+                setIsReset(false);
+            } else if (isLogin) {
                 await signInWithEmailAndPassword(auth, email, password);
             } else {
                 await createUserWithEmailAndPassword(auth, email, password);
             }
         } catch (err) {
-            setError(err.message);
+            setError(err.message.replace('Firebase: ', ''));
         }
     };
 
@@ -62,9 +71,9 @@ export default function Auth() {
                     backdropFilter: 'blur(20px)'
                 }}
             >
-                <h1 className="mb-4">Taskflow</h1>
+                <h1 className="mb-4">TaskVrmx</h1>
                 <p className="mb-4" style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-                    {isLogin ? 'Welcome back! Sign in to continue.' : 'Create an account to get started.'}
+                    {isReset ? 'Reset Password' : (isLogin ? 'Welcome back! Sign in to continue.' : 'Create an account to get started.')}
                 </p>
 
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -104,16 +113,19 @@ export default function Auth() {
                             required
                             style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid var(--glass-border)' }}
                         />
-                        <motion.input
-                            whileFocus={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                            type="password"
-                            placeholder="Password"
-                            className="task-input"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            required
-                            style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid var(--glass-border)' }}
-                        />
+
+                        {!isReset && (
+                            <motion.input
+                                whileFocus={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.1)' }}
+                                type="password"
+                                placeholder="Password"
+                                className="task-input"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                required
+                                style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid var(--glass-border)' }}
+                            />
+                        )}
 
                         {error && (
                             <motion.div
@@ -125,6 +137,16 @@ export default function Auth() {
                             </motion.div>
                         )}
 
+                        {message && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                style={{ color: '#10b981', fontSize: '0.875rem', textAlign: 'center', background: 'rgba(16, 185, 129, 0.1)', padding: '0.5rem', borderRadius: '8px' }}
+                            >
+                                {message}
+                            </motion.div>
+                        )}
+
                         <motion.button
                             type="submit"
                             className="btn btn-primary"
@@ -132,12 +154,21 @@ export default function Auth() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            {isLogin ? 'Log In' : 'Sign Up'}
+                            {isReset ? 'Send Reset Link' : (isLogin ? 'Log In' : 'Sign Up')}
                         </motion.button>
                     </form>
 
+                    {!isReset && (
+                        <button
+                            onClick={() => { setError(''); setMessage(''); setIsReset(true); }}
+                            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', marginTop: '0.5rem' }}
+                        >
+                            Forgot Password?
+                        </button>
+                    )}
+
                     <button
-                        onClick={() => { setError(''); setIsLogin(!isLogin); }}
+                        onClick={() => { setError(''); setMessage(''); setIsLogin(!isLogin); setIsReset(false); }}
                         style={{
                             background: 'none',
                             border: 'none',
@@ -150,7 +181,7 @@ export default function Auth() {
                             opacity: 0.8
                         }}
                     >
-                        {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}
+                        {isReset ? "Back to Login" : (isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In")}
                     </button>
                 </div>
             </motion.div>

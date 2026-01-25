@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2, Check, Edit2, Save, X, Calendar } from 'lucide-react';
+import { Trash2, Check, Edit2, Save, X, Calendar, Repeat } from 'lucide-react';
 import { motion } from 'framer-motion';
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
@@ -76,55 +76,67 @@ export default function TaskItem({ task, onToggle, onDelete, onUpdate }) {
             transition={{ type: 'spring', stiffness: 300 }}
         >
             {isEditing ? (
-                <div className="edit-mode">
+                <div className="edit-mode-container">
                     <input
                         type="text"
                         value={editedTask.text}
                         onChange={(e) => setEditedTask({ ...editedTask, text: e.target.value })}
-                        className="edit-input"
+                        className="edit-input-title"
                         placeholder="Task title"
                     />
                     <textarea
                         value={editedTask.description}
                         onChange={(e) => setEditedTask({ ...editedTask, description: e.target.value })}
-                        className="edit-textarea"
+                        className="edit-input-desc"
                         placeholder="Description (optional)"
                         rows="2"
                     />
-                    <div className="edit-controls">
-                        <select
-                            value={editedTask.priority}
-                            onChange={(e) => setEditedTask({ ...editedTask, priority: e.target.value })}
-                            className="edit-select"
-                        >
-                            <option value="low">🟢 Low Priority</option>
-                            <option value="medium">🟡 Medium Priority</option>
-                            <option value="high">🔴 High Priority</option>
-                        </select>
-                        <select
-                            value={editedTask.status}
-                            onChange={(e) => setEditedTask({ ...editedTask, status: e.target.value })}
-                            className="edit-select"
-                        >
-                            <option value="pending">🕒 Pending</option>
-                            <option value="in-progress">🔄 In Progress</option>
-                            <option value="completed">✅ Completed</option>
-                        </select>
-                        <DatePicker
-                            selected={editedTask.dueDate}
-                            onChange={(date) => setEditedTask({ ...editedTask, dueDate: date })}
-                            className="edit-datepicker"
-                            placeholderText="Due date"
-                            dateFormat="MMM d, yyyy"
-                            isClearable
-                        />
+                    <div className="edit-grid">
+                        <div className="input-field">
+                            <label>Priority</label>
+                            <select
+                                value={editedTask.priority}
+                                onChange={(e) => setEditedTask({ ...editedTask, priority: e.target.value })}
+                            >
+                                <option value="low">🟢 Low Priority</option>
+                                <option value="medium">🟡 Medium Priority</option>
+                                <option value="high">🔴 High Priority</option>
+                            </select>
+                        </div>
+                        <div className="input-field">
+                            <label>Status</label>
+                            <select
+                                value={editedTask.status}
+                                onChange={(e) => setEditedTask({ ...editedTask, status: e.target.value })}
+                            >
+                                <option value="pending">🕒 Pending</option>
+                                <option value="in-progress">🔄 In Progress</option>
+                                <option value="completed">✅ Completed</option>
+                            </select>
+                        </div>
+                        <div className="input-field">
+                            <label>Due Date</label>
+                            <DatePicker
+                                selected={editedTask.dueDate}
+                                onChange={(date) => setEditedTask({ ...editedTask, dueDate: date })}
+                                placeholderText="Due date"
+                                dateFormat="MMM d, yyyy"
+                                isClearable
+                            />
+                        </div>
                     </div>
-                    <div className="edit-actions">
-                        <button onClick={handleSave} className="btn btn-primary btn-sm">
-                            <Save size={16} /> Save
+                    <div className="input-actions">
+                        <button
+                            onClick={handleCancel}
+                            className="btn-text"
+                        >
+                            Cancel
                         </button>
-                        <button onClick={handleCancel} className="btn btn-sm">
-                            <X size={16} /> Cancel
+                        <button
+                            onClick={handleSave}
+                            className="btn btn-primary"
+                        >
+                            <Save size={16} style={{ marginRight: '0.5rem' }} /> Save
                         </button>
                     </div>
                 </div>
@@ -165,6 +177,12 @@ export default function TaskItem({ task, onToggle, onDelete, onUpdate }) {
                                         Due: {format(task.dueDate.toDate ? task.dueDate.toDate() : new Date(task.dueDate), 'MMM d, yyyy')}
                                         {overdue && ' (Overdue!)'}
                                     </span>
+                                </div>
+                            )}
+                            {task.recurrence && task.recurrence !== 'none' && (
+                                <div className="flex items-center gap-1 text-xs text-blue-500 font-medium mt-1">
+                                    <Repeat size={12} />
+                                    <span className="capitalize">{task.recurrence}</span>
                                 </div>
                             )}
                             <span className="task-category">{task.category}</span>

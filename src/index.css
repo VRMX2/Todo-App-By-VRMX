@@ -2,29 +2,33 @@
 
 :root {
     --primary: #f97316;
-    --primary-glow: rgba(249, 115, 22, 0.5);
-    --bg-gradient-start: #0f172a;
-    --bg-gradient-end: #1e1b4b;
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --primary-glow: rgba(249, 115, 22, 0.4);
 
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
+    /* Light Mode (Premium) */
+    --bg-gradient-start: #f3f6fc;
+    --bg-gradient-end: #eff3f9;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 
-    --radius-md: 12px;
-    --radius-lg: 20px;
+    --text-main: #1a202c;
+    --text-muted: #718096;
+
+    --radius-md: 14px;
+    --radius-lg: 24px;
     --radius-full: 9999px;
 }
 
-:root[class="light"] {
-    --bg-gradient-start: #f8fafc;
-    --bg-gradient-end: #e2e8f0;
-    --glass-bg: rgba(255, 255, 255, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.4);
-    --text-main: #1e293b;
-    --text-muted: #64748b;
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+:root.dark {
+    /* Dark Mode (Deep OLED) */
+    --bg-gradient-start: #0f172a;
+    --bg-gradient-end: #020617;
+    --glass-bg: rgba(15, 23, 42, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
 }
 
 * {
@@ -77,9 +81,10 @@ h1 {
     letter-spacing: -0.02em;
     background: linear-gradient(to right, var(--text-main), var(--primary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.5rem;
-    drop-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.1));
 }
 
 h2 {
@@ -207,36 +212,7 @@ p {
     letter-spacing: 0.1em;
 }
 
-/* Input Area */
-.input-group {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 3rem;
-    background: var(--glass-bg);
-    padding: 0.5rem;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-}
 
-.task-input {
-    flex: 1;
-    padding: 1rem 1.5rem;
-    background: transparent;
-    border: none;
-    border-radius: var(--radius-md);
-    color: var(--text-main);
-    font-size: 1.1rem;
-    outline: none;
-}
-
-.task-input::placeholder {
-    color: var(--text-muted);
-}
-
-.task-input:focus {
-    background: rgba(255, 255, 255, 0.05);
-}
 
 /* Filter Tabs */
 .filter-tabs {
@@ -246,6 +222,159 @@ p {
     padding: 0.5rem;
     overflow-x: auto;
 }
+
+/* Task Input Form */
+.task-input-form {
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    overflow: visible;
+}
+
+.task-input-form.expanded {
+    padding: 2rem;
+    box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2), var(--glass-shadow);
+}
+
+.input-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-badge {
+    background: rgba(249, 115, 22, 0.1);
+    color: var(--primary);
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-main);
+    outline: none;
+    font-family: 'Outfit', sans-serif;
+}
+
+.main-input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.input-details {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-details.show {
+    max-height: 500px;
+    /* Allow enough height for expansion */
+    opacity: 1;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--glass-border);
+    overflow: visible;
+    /* Important for datepicker */
+}
+
+.description-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.description-input:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-field label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-left: 0.25rem;
+}
+
+.input-field select,
+.input-field input[type="text"] {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.input-field select:focus,
+.input-field input[type="text"]:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.input-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.btn-text {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    transition: color 0.2s;
+}
+
+.btn-text:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+
 
 .filter-tab {
     background: transparent;
@@ -425,10 +554,55 @@ p {
     opacity: 0.6;
 }
 
-.task-badges {
+/* Edit Mode Styles */
+.edit-mode-container {
+    width: 100%;
     display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+.edit-input-title {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 500;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.edit-input-desc {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    resize: none;
+    min-height: 80px;
+    transition: all 0.3s ease;
+}
+
+.edit-input-title:focus,
+.edit-input-desc:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.edit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1rem;
 }
 
 .badge {
@@ -525,60 +699,7 @@ p {
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
 }
 
-/* Edit Mode Styles */
-.edit-mode {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
 
-.edit-input,
-.edit-textarea,
-.edit-select,
-.edit-datepicker {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    color: var(--text-main);
-    font-size: 1rem;
-    font-family: 'Outfit', sans-serif;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
-.edit-input:focus,
-.edit-textarea:focus,
-.edit-select:focus,
-.edit-datepicker:focus {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
-}
-
-.edit-textarea {
-    resize: vertical;
-    min-height: 60px;
-}
-
-.edit-controls {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 0.75rem;
-}
-
-.edit-actions {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-}
-
-.btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-}
 
 /* Date Picker Customization */
 .react-datepicker-wrapper {
@@ -620,6 +741,171 @@ p {
     color: white;
 }
 
-.react-datepicker__day--keyboard-selected {
-    background: rgba(249, 115, 22, 0.3);
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 450px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--text-main);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.close-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+/* Profile Specific Styles */
+.profile-avatar-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid rgba(249, 115, 22, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-icon {
+    color: var(--text-muted);
+}
+
+.avatar-edit-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.avatar-edit-badge:hover {
+    transform: scale(1.1);
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.modal-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.modal-input:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.alert.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.alert.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.btn.full-width {
+    width: 100%;
+    margin-top: 1rem;
 }
