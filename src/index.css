@@ -25,6 +25,21 @@
     --radius-full: 9999px;
 }
 
+:root[class="dark"] {
+    --bg-color: #111827;
+    /* Gray-900 */
+    --text-main: #f9fafb;
+    /* Gray-50 */
+    --text-muted: #9ca3af;
+    /* Gray-400 */
+    --border-color: #374151;
+    /* Gray-700 */
+    --card-bg: #1f2937;
+    /* Gray-800 */
+    --light-orange: #7c2d12;
+    /* Orange-900 */
+}
+
 * {
     box-sizing: border-box;
 }
@@ -166,14 +181,7 @@ p {
     margin-bottom: 2rem;
 }
 
-.task-input {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    outline: none;
-}
+/* combined with below */
 
 .task-input:focus {
     border-color: var(--primary);
@@ -217,9 +225,19 @@ p {
     padding: 1rem;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    /* More rounded as per screenshot */
-    background: white;
+    background: var(--card-bg);
     transition: all 0.2s;
+}
+
+.task-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    outline: none;
+    background-color: var(--card-bg);
+    color: var(--text-main);
 }
 
 .task-item:hover {

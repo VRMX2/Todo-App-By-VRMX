@@ -1,11 +1,31 @@
 import { useState, useEffect } from 'react'
-import { CheckSquare } from 'lucide-react';
+import { Sun, Moon, CheckSquare } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
 import './index.css'
 
 function App() {
+    const [theme, setTheme] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('theme') || 'light';
+        }
+        return 'light';
+    });
+
+    useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    };
+
     const [tasks, setTasks] = useState([
         { id: 1, text: 'Review project proposal', category: 'Work', completed: false },
         { id: 2, text: 'Schedule team meeting', category: 'Work', completed: true },
@@ -14,11 +34,11 @@ function App() {
         { id: 5, text: 'Call mom', category: 'Personal', completed: true },
     ]);
 
-    const addTask = (text) => {
+    const addTask = (text, category) => {
         const newTask = {
             id: Date.now(),
             text,
-            category: 'Personal', // Default category for now
+            category,
             completed: false,
         };
         setTasks([newTask, ...tasks]);
@@ -50,7 +70,17 @@ function App() {
                         <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>Stay organized</span>
                     </div>
                 </div>
-                <div style={{ color: '#6b7280' }}>{dateStr}</div>
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={toggleTheme}
+                        className="btn"
+                        style={{ padding: '0.5rem', background: 'transparent', color: 'var(--text-muted)' }}
+                        aria-label="Toggle theme"
+                    >
+                        {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+                    </button>
+                    <div style={{ color: '#6b7280' }}>{dateStr}</div>
+                </div>
             </header>
 
             <section className="mb-4">
