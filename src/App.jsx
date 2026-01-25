@@ -1,11 +1,31 @@
 import { useState, useEffect } from 'react'
-import { Sun, Moon, CheckSquare } from 'lucide-react';
+import { Sun, Moon, CheckSquare, LogOut } from 'lucide-react';
+import { auth, db } from './firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import {
+    collection,
+    query,
+    where,
+    onSnapshot,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    doc,
+    serverTimestamp,
+    orderBy
+} from 'firebase/firestore';
 import Dashboard from './components/Dashboard';
 import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
+import Auth from './components/Auth';
 import './index.css'
 
 function App() {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [tasks, setTasks] = useState([]);
+
+    // Theme State
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem('theme') || 'light';
@@ -26,37 +46,77 @@ function App() {
         setTheme(prev => prev === 'light' ? 'dark' : 'light');
     };
 
-    const [tasks, setTasks] = useState([
-        { id: 1, text: 'Review project proposal', category: 'Work', completed: false },
-        { id: 2, text: 'Schedule team meeting', category: 'Work', completed: true },
-        { id: 3, text: 'Buy groceries', category: 'Personal', completed: false },
-        { id: 4, text: 'Complete design mockups', category: 'Work', completed: false },
-        { id: 5, text: 'Call mom', category: 'Personal', completed: true },
-    ]);
+    // Auth Listener
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            setLoading(false);
+        });
+        return () => unsubscribe();
+    }, []);
 
-    const addTask = (text, category) => {
-        const newTask = {
-            id: Date.now(),
+    // Firestore Task Listener
+    useEffect(() => {
+        if (!user) {
+            setTasks([]);
+            return;
+        }
+
+        const q = query(
+            collection(db, 'tasks'),
+            where('uid', '==', user.uid),
+            orderBy('createdAt', 'desc')
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const tasksData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setTasks(tasksData);
+        });
+
+        return () => unsubscribe();
+    }, [user]);
+
+    const addTask = async (text, category) => {
+        if (!user) return;
+        await addDoc(collection(db, 'tasks'), {
             text,
             category,
             completed: false,
-        };
-        setTasks([newTask, ...tasks]);
+            uid: user.uid,
+            createdAt: serverTimestamp()
+        });
     };
 
-    const toggleTask = (id) => {
-        setTasks(tasks.map(t =>
-            t.id === id ? { ...t, completed: !t.completed } : t
-        ));
+    const toggleTask = async (id) => {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+        await updateDoc(doc(db, 'tasks', id), {
+            completed: !task.completed
+        });
     };
 
-    const deleteTask = (id) => {
-        setTasks(tasks.filter(t => t.id !== id));
+    const deleteTask = async (id) => {
+        await deleteDoc(doc(db, 'tasks', id));
+    };
+
+    const handleSignOut = () => {
+        signOut(auth);
     };
 
     // Date formatting
     const today = new Date();
     const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+
+    if (loading) {
+        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading...</div>;
+    }
+
+    if (!user) {
+        return <Auth />;
+    }
 
     return (
         <div className="app-container">
@@ -67,7 +127,7 @@ function App() {
                     </div>
                     <div>
                         <h2 style={{ fontSize: '1.25rem', margin: 0 }}>Taskflow</h2>
-                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>Stay organized</span>
+                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>Welcome, {user.email}</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -79,6 +139,17 @@ function App() {
                     >
                         {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                     </button>
+
+                    <button
+                        onClick={handleSignOut}
+                        className="btn"
+                        style={{ padding: '0.5rem', background: 'transparent', color: 'var(--text-muted)' }}
+                        aria-label="Sign out"
+                        title="Sign Out"
+                    >
+                        <LogOut size={20} />
+                    </button>
+
                     <div style={{ color: '#6b7280' }}>{dateStr}</div>
                 </div>
             </header>
