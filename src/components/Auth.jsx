@@ -8,7 +8,7 @@ import {
     sendPasswordResetEmail
 } from 'firebase/auth';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, CheckCircle2, Sparkles, Shield, Zap } from 'lucide-react';
 
 export default function Auth() {
     const [email, setEmail] = useState('');
@@ -54,21 +54,68 @@ export default function Auth() {
             position: 'relative',
             overflow: 'hidden'
         }}>
-            {/* Animated Background */}
+            {/* 3D Animated Background */}
             <div style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'radial-gradient(circle at 20% 50%, rgba(249, 115, 22, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.1) 0%, transparent 50%)',
-                opacity: 0.5
-            }} />
+                background: 'radial-gradient(circle at 20% 50%, rgba(249, 115, 22, 0.2) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.15) 0%, transparent 50%)',
+                opacity: 0.6
+            }}>
+                {/* Floating Orbs */}
+                <motion.div
+                    animate={{
+                        y: [0, -30, 0],
+                        x: [0, 20, 0],
+                        scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
+                    style={{
+                        position: 'absolute',
+                        top: '20%',
+                        left: '10%',
+                        width: '300px',
+                        height: '300px',
+                        background: 'radial-gradient(circle, rgba(249, 115, 22, 0.3), transparent)',
+                        borderRadius: '50%',
+                        filter: 'blur(60px)',
+                    }}
+                />
+                <motion.div
+                    animate={{
+                        y: [0, 40, 0],
+                        x: [0, -30, 0],
+                        scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                        duration: 10,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1
+                    }}
+                    style={{
+                        position: 'absolute',
+                        bottom: '10%',
+                        right: '15%',
+                        width: '400px',
+                        height: '400px',
+                        background: 'radial-gradient(circle, rgba(234, 88, 12, 0.25), transparent)',
+                        borderRadius: '50%',
+                        filter: 'blur(80px)',
+                    }}
+                />
+            </div>
 
-            {/* Left Side - Branding */}
+            {/* Left Side - 3D Branding */}
             <div style={{
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                padding: '3rem',
+                padding: '4rem',
                 position: 'relative',
                 zIndex: 1
             }}>
@@ -77,58 +124,114 @@ export default function Auth() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8 }}
                 >
-                    <div style={{ marginBottom: '2rem' }}>
-                        <div style={{
-                            width: '60px',
-                            height: '60px',
+                    {/* 3D Logo */}
+                    <motion.div
+                        animate={{
+                            rotateY: [0, 10, 0, -10, 0],
+                            rotateX: [0, 5, 0, -5, 0],
+                        }}
+                        transition={{
+                            duration: 6,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }}
+                        style={{
+                            width: '80px',
+                            height: '80px',
                             background: 'linear-gradient(135deg, #f97316, #ea580c)',
-                            borderRadius: '16px',
+                            borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            marginBottom: '1.5rem',
-                            boxShadow: '0 10px 30px rgba(249, 115, 22, 0.3)'
-                        }}>
-                            <CheckCircle2 size={32} color="white" />
-                        </div>
-                        <h1 style={{
-                            fontSize: '3rem',
-                            fontWeight: '800',
-                            marginBottom: '1rem',
-                            background: 'linear-gradient(135deg, var(--text-main), var(--primary))',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent'
-                        }}>
-                            TaskVrmx
-                        </h1>
-                        <p style={{
-                            fontSize: '1.25rem',
-                            color: 'var(--text-muted)',
-                            maxWidth: '500px',
-                            lineHeight: '1.6'
-                        }}>
-                            Organize your life with simplicity and elegance. Your tasks, your way.
-                        </p>
-                    </div>
+                            marginBottom: '2rem',
+                            boxShadow: '0 20px 60px rgba(249, 115, 22, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                            transform: 'perspective(1000px)',
+                            position: 'relative'
+                        }}
+                    >
+                        <CheckCircle2 size={40} color="white" strokeWidth={2.5} />
+                        <div style={{
+                            position: 'absolute',
+                            inset: '-10px',
+                            background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.3), transparent)',
+                            borderRadius: '25px',
+                            filter: 'blur(20px)',
+                            zIndex: -1
+                        }} />
+                    </motion.div>
 
-                    <div style={{ display: 'flex', gap: '2rem', marginTop: '3rem' }}>
-                        <div>
-                            <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--primary)' }}>10K+</div>
-                            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Active Users</div>
-                        </div>
-                        <div>
-                            <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--primary)' }}>50K+</div>
-                            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Tasks Completed</div>
-                        </div>
-                        <div>
-                            <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--primary)' }}>4.9★</div>
-                            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>User Rating</div>
-                        </div>
+                    <h1 style={{
+                        fontSize: '4rem',
+                        fontWeight: '900',
+                        marginBottom: '1.5rem',
+                        background: 'linear-gradient(135deg, var(--text-main) 0%, var(--primary) 50%, var(--text-main) 100%)',
+                        backgroundSize: '200% 200%',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        letterSpacing: '-0.02em',
+                        lineHeight: '1'
+                    }}>
+                        TaskVrmx
+                    </h1>
+
+                    <p style={{
+                        fontSize: '1.375rem',
+                        color: 'var(--text-muted)',
+                        maxWidth: '550px',
+                        lineHeight: '1.7',
+                        marginBottom: '3rem'
+                    }}>
+                        Experience task management reimagined with cutting-edge design and seamless functionality.
+                    </p>
+
+                    {/* Feature Cards */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '500px' }}>
+                        {[
+                            { icon: Sparkles, title: 'Smart Organization', desc: 'AI-powered task prioritization' },
+                            { icon: Shield, title: 'Secure & Private', desc: 'End-to-end encryption' },
+                            { icon: Zap, title: 'Lightning Fast', desc: 'Instant sync across devices' }
+                        ].map((feature, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.3 + i * 0.1 }}
+                                whileHover={{ x: 10, scale: 1.02 }}
+                                style={{
+                                    display: 'flex',
+                                    gap: '1rem',
+                                    padding: '1.25rem',
+                                    background: 'var(--glass-bg)',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid var(--glass-border)',
+                                    borderRadius: '16px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s'
+                                }}
+                            >
+                                <div style={{
+                                    width: '48px',
+                                    height: '48px',
+                                    background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.05))',
+                                    borderRadius: '12px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexShrink: 0
+                                }}>
+                                    <feature.icon size={24} color="var(--primary)" />
+                                </div>
+                                <div>
+                                    <div style={{ fontWeight: '600', marginBottom: '0.25rem', fontSize: '1rem' }}>{feature.title}</div>
+                                    <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{feature.desc}</div>
+                                </div>
+                            </motion.div>
+                        ))}
                     </div>
                 </motion.div>
             </div>
 
-            {/* Right Side - Auth Form */}
+            {/* Right Side - 3D Auth Form */}
             <div style={{
                 flex: 1,
                 display: 'flex',
@@ -139,54 +242,77 @@ export default function Auth() {
                 zIndex: 1
             }}>
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="glass-card"
+                    initial={{ opacity: 0, y: 30, rotateX: 10 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
                     style={{
                         width: '100%',
-                        maxWidth: '450px',
-                        padding: '3rem',
+                        maxWidth: '480px',
+                        padding: '3.5rem',
                         background: 'var(--glass-bg)',
-                        backdropFilter: 'blur(20px)',
+                        backdropFilter: 'blur(30px)',
                         border: '1px solid var(--glass-border)',
-                        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)'
+                        borderRadius: '32px',
+                        boxShadow: '0 30px 90px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
+                        transform: 'perspective(1000px)',
+                        position: 'relative'
                     }}
                 >
-                    <div style={{ marginBottom: '2rem' }}>
-                        <h2 style={{ fontSize: '1.875rem', fontWeight: '700', marginBottom: '0.5rem' }}>
-                            {isReset ? 'Reset Password' : (isLogin ? 'Welcome Back' : 'Create Account')}
-                        </h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                            {isReset ? 'Enter your email to reset your password' : (isLogin ? 'Sign in to continue to TaskVrmx' : 'Start organizing your tasks today')}
+                    {/* Glow Effect */}
+                    <div style={{
+                        position: 'absolute',
+                        inset: '-2px',
+                        background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.1), transparent, rgba(249, 115, 22, 0.1))',
+                        borderRadius: '32px',
+                        zIndex: -1,
+                        filter: 'blur(20px)'
+                    }} />
+
+                    <div style={{ marginBottom: '2.5rem' }}>
+                        <motion.h2
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            style={{
+                                fontSize: '2.25rem',
+                                fontWeight: '800',
+                                marginBottom: '0.75rem',
+                                background: 'linear-gradient(135deg, var(--text-main), var(--primary))',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent'
+                            }}
+                        >
+                            {isReset ? 'Reset Password' : (isLogin ? 'Welcome Back' : 'Get Started')}
+                        </motion.h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', lineHeight: '1.5' }}>
+                            {isReset ? 'Enter your email to receive a reset link' : (isLogin ? 'Sign in to access your workspace' : 'Create your account in seconds')}
                         </p>
                     </div>
 
                     {/* Google Sign In */}
                     <motion.button
-                        whileHover={{ scale: 1.02 }}
+                        whileHover={{ scale: 1.03, y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={handleGoogleLogin}
                         style={{
                             width: '100%',
-                            padding: '0.875rem',
-                            background: 'white',
+                            padding: '1rem',
+                            background: 'linear-gradient(135deg, #ffffff, #f8f9fa)',
                             color: '#1f2937',
-                            border: '1px solid #e5e7eb',
-                            borderRadius: 'var(--radius-md)',
-                            fontSize: '0.9375rem',
+                            border: 'none',
+                            borderRadius: '16px',
+                            fontSize: '1rem',
                             fontWeight: '600',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '0.75rem',
+                            gap: '0.875rem',
                             cursor: 'pointer',
-                            marginBottom: '1.5rem',
-                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                            transition: 'all 0.2s'
+                            marginBottom: '2rem',
+                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+                            transition: 'all 0.3s'
                         }}
                     >
-                        <svg width="18" height="18" viewBox="0 0 18 18">
+                        <svg width="20" height="20" viewBox="0 0 18 18">
                             <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" />
                             <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" />
                             <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z" />
@@ -196,20 +322,23 @@ export default function Auth() {
                     </motion.button>
 
                     {/* Divider */}
-                    <div style={{ display: 'flex', alignItems: 'center', margin: '1.5rem 0' }}>
-                        <div style={{ flex: 1, height: '1px', background: 'var(--glass-border)' }} />
-                        <span style={{ padding: '0 1rem', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: '600' }}>OR</span>
-                        <div style={{ flex: 1, height: '1px', background: 'var(--glass-border)' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', margin: '2rem 0' }}>
+                        <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, transparent, var(--glass-border), transparent)' }} />
+                        <span style={{ padding: '0 1.25rem', color: 'var(--text-muted)', fontSize: '0.8125rem', fontWeight: '700', letterSpacing: '0.05em' }}>OR</span>
+                        <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to left, transparent, var(--glass-border), transparent)' }} />
                     </div>
 
                     {/* Email Form */}
-                    <form onSubmit={handleEmailAuth} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600', color: 'var(--text-main)' }}>
-                                Email
+                    <form onSubmit={handleEmailAuth} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                        <motion.div
+                            whileHover={{ scale: 1.01 }}
+                            transition={{ type: "spring", stiffness: 400 }}
+                        >
+                            <label style={{ display: 'block', marginBottom: '0.625rem', fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '0.01em' }}>
+                                Email Address
                             </label>
                             <div style={{ position: 'relative' }}>
-                                <Mail size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                <Mail size={20} style={{ position: 'absolute', left: '1.125rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', zIndex: 1 }} />
                                 <input
                                     type="email"
                                     placeholder="you@example.com"
@@ -218,28 +347,40 @@ export default function Auth() {
                                     required
                                     style={{
                                         width: '100%',
-                                        padding: '0.875rem 1rem 0.875rem 3rem',
-                                        background: 'rgba(255, 255, 255, 0.05)',
-                                        border: '1px solid var(--glass-border)',
-                                        borderRadius: 'var(--radius-md)',
+                                        padding: '1rem 1.125rem 1rem 3.5rem',
+                                        background: 'rgba(255, 255, 255, 0.03)',
+                                        border: '2px solid var(--glass-border)',
+                                        borderRadius: '14px',
                                         color: 'var(--text-main)',
-                                        fontSize: '0.9375rem',
+                                        fontSize: '1rem',
                                         outline: 'none',
-                                        transition: 'all 0.2s'
+                                        transition: 'all 0.3s',
+                                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
                                     }}
-                                    onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-                                    onBlur={(e) => e.target.style.borderColor = 'var(--glass-border)'}
+                                    onFocus={(e) => {
+                                        e.target.style.borderColor = 'var(--primary)';
+                                        e.target.style.background = 'rgba(255, 255, 255, 0.06)';
+                                        e.target.style.boxShadow = '0 0 0 4px rgba(249, 115, 22, 0.1)';
+                                    }}
+                                    onBlur={(e) => {
+                                        e.target.style.borderColor = 'var(--glass-border)';
+                                        e.target.style.background = 'rgba(255, 255, 255, 0.03)';
+                                        e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
+                                    }}
                                 />
                             </div>
-                        </div>
+                        </motion.div>
 
                         {!isReset && (
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600', color: 'var(--text-main)' }}>
+                            <motion.div
+                                whileHover={{ scale: 1.01 }}
+                                transition={{ type: "spring", stiffness: 400 }}
+                            >
+                                <label style={{ display: 'block', marginBottom: '0.625rem', fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '0.01em' }}>
                                     Password
                                 </label>
                                 <div style={{ position: 'relative' }}>
-                                    <Lock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                    <Lock size={20} style={{ position: 'absolute', left: '1.125rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', zIndex: 1 }} />
                                     <input
                                         type="password"
                                         placeholder="••••••••"
@@ -248,35 +389,45 @@ export default function Auth() {
                                         required
                                         style={{
                                             width: '100%',
-                                            padding: '0.875rem 1rem 0.875rem 3rem',
-                                            background: 'rgba(255, 255, 255, 0.05)',
-                                            border: '1px solid var(--glass-border)',
-                                            borderRadius: 'var(--radius-md)',
+                                            padding: '1rem 1.125rem 1rem 3.5rem',
+                                            background: 'rgba(255, 255, 255, 0.03)',
+                                            border: '2px solid var(--glass-border)',
+                                            borderRadius: '14px',
                                             color: 'var(--text-main)',
-                                            fontSize: '0.9375rem',
+                                            fontSize: '1rem',
                                             outline: 'none',
-                                            transition: 'all 0.2s'
+                                            transition: 'all 0.3s',
+                                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
                                         }}
-                                        onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-                                        onBlur={(e) => e.target.style.borderColor = 'var(--glass-border)'}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = 'var(--primary)';
+                                            e.target.style.background = 'rgba(255, 255, 255, 0.06)';
+                                            e.target.style.boxShadow = '0 0 0 4px rgba(249, 115, 22, 0.1)';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = 'var(--glass-border)';
+                                            e.target.style.background = 'rgba(255, 255, 255, 0.03)';
+                                            e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
+                                        }}
                                     />
                                 </div>
-                            </div>
+                            </motion.div>
                         )}
 
                         <AnimatePresence>
                             {error && (
                                 <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    exit={{ opacity: 0, height: 0 }}
+                                    initial={{ opacity: 0, height: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                                    exit={{ opacity: 0, height: 0, scale: 0.9 }}
                                     style={{
-                                        padding: '0.75rem 1rem',
-                                        background: 'rgba(239, 68, 68, 0.1)',
+                                        padding: '1rem 1.25rem',
+                                        background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05))',
                                         border: '1px solid rgba(239, 68, 68, 0.3)',
-                                        borderRadius: 'var(--radius-md)',
+                                        borderRadius: '14px',
                                         color: '#ef4444',
-                                        fontSize: '0.875rem'
+                                        fontSize: '0.875rem',
+                                        fontWeight: '500'
                                     }}
                                 >
                                     {error}
@@ -285,16 +436,17 @@ export default function Auth() {
 
                             {message && (
                                 <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    exit={{ opacity: 0, height: 0 }}
+                                    initial={{ opacity: 0, height: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                                    exit={{ opacity: 0, height: 0, scale: 0.9 }}
                                     style={{
-                                        padding: '0.75rem 1rem',
-                                        background: 'rgba(16, 185, 129, 0.1)',
+                                        padding: '1rem 1.25rem',
+                                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05))',
                                         border: '1px solid rgba(16, 185, 129, 0.3)',
-                                        borderRadius: 'var(--radius-md)',
+                                        borderRadius: '14px',
                                         color: '#10b981',
-                                        fontSize: '0.875rem'
+                                        fontSize: '0.875rem',
+                                        fontWeight: '500'
                                     }}
                                 >
                                     {message}
@@ -304,28 +456,35 @@ export default function Auth() {
 
                         <motion.button
                             type="submit"
-                            className="btn btn-primary"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            whileHover={{ scale: 1.03, y: -2 }}
+                            whileTap={{ scale: 0.97 }}
                             style={{
                                 width: '100%',
-                                padding: '0.875rem',
-                                fontSize: '0.9375rem',
-                                fontWeight: '600',
+                                padding: '1.125rem',
+                                background: 'linear-gradient(135deg, #f97316, #ea580c)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '14px',
+                                fontSize: '1.0625rem',
+                                fontWeight: '700',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                gap: '0.5rem',
-                                marginTop: '0.5rem'
+                                gap: '0.625rem',
+                                cursor: 'pointer',
+                                marginTop: '0.5rem',
+                                boxShadow: '0 10px 30px rgba(249, 115, 22, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                                transition: 'all 0.3s',
+                                letterSpacing: '0.01em'
                             }}
                         >
                             {isReset ? 'Send Reset Link' : (isLogin ? 'Sign In' : 'Create Account')}
-                            <ArrowRight size={18} />
+                            <ArrowRight size={20} strokeWidth={2.5} />
                         </motion.button>
                     </form>
 
                     {/* Footer Links */}
-                    <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                    <div style={{ marginTop: '2rem', textAlign: 'center' }}>
                         {!isReset && (
                             <button
                                 onClick={() => { setError(''); setMessage(''); setIsReset(true); }}
@@ -333,19 +492,22 @@ export default function Auth() {
                                     background: 'none',
                                     border: 'none',
                                     color: 'var(--primary)',
-                                    fontSize: '0.875rem',
+                                    fontSize: '0.9375rem',
                                     cursor: 'pointer',
-                                    fontWeight: '500',
-                                    marginBottom: '1rem',
+                                    fontWeight: '600',
+                                    marginBottom: '1.25rem',
                                     display: 'block',
-                                    width: '100%'
+                                    width: '100%',
+                                    transition: 'opacity 0.2s'
                                 }}
+                                onMouseEnter={(e) => e.target.style.opacity = '0.8'}
+                                onMouseLeave={(e) => e.target.style.opacity = '1'}
                             >
                                 Forgot your password?
                             </button>
                         )}
 
-                        <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                        <div style={{ fontSize: '0.9375rem', color: 'var(--text-muted)' }}>
                             {isReset ? (
                                 <button
                                     onClick={() => { setError(''); setMessage(''); setIsReset(false); }}
@@ -354,7 +516,8 @@ export default function Auth() {
                                         border: 'none',
                                         color: 'var(--primary)',
                                         cursor: 'pointer',
-                                        fontWeight: '600'
+                                        fontWeight: '700',
+                                        fontSize: '0.9375rem'
                                     }}
                                 >
                                     ← Back to Sign In
@@ -369,7 +532,8 @@ export default function Auth() {
                                             border: 'none',
                                             color: 'var(--primary)',
                                             cursor: 'pointer',
-                                            fontWeight: '600'
+                                            fontWeight: '700',
+                                            fontSize: '0.9375rem'
                                         }}
                                     >
                                         {isLogin ? 'Sign Up' : 'Sign In'}
