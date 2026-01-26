@@ -921,3 +921,302 @@ p {
     width: 100%;
     margin-top: 1rem;
 }
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablets and Small Laptops */
+@media (max-width: 1024px) {
+    .app-container {
+        max-width: 100%;
+        padding: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .app-container {
+        padding: 1rem;
+    }
+
+    /* Header Adjustments */
+    header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+
+    header .flex.items-center.gap-2 {
+        width: 100%;
+    }
+
+    header .flex.items-center.gap-4 {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Typography */
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .subtitle {
+        margin-bottom: 2rem;
+    }
+
+    /* Dashboard Stats */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    /* Task Input */
+    .task-input-form {
+        padding: 1rem;
+    }
+
+    .task-input-form.expanded {
+        padding: 1.5rem;
+    }
+
+    .main-input {
+        font-size: 1rem;
+    }
+
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Task List */
+    .task-item {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .task-checkbox {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .task-content {
+        font-size: 1rem;
+    }
+
+    .task-text {
+        font-size: 1rem;
+    }
+
+    .task-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .task-actions {
+        opacity: 1;
+        margin-top: 0.5rem;
+    }
+
+    .tag {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.8125rem;
+    }
+
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+        gap: 0.5rem;
+        padding: 0.25rem;
+    }
+
+    .filter-tab {
+        padding: 0.5rem 1rem;
+        font-size: 0.8125rem;
+    }
+
+    /* Modal */
+    .modal-card {
+        max-width: 100%;
+        margin: 1rem;
+    }
+
+    .modal-header {
+        padding: 1rem;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    /* Edit Mode */
+    .edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-input-title {
+        font-size: 1rem;
+    }
+
+    .edit-input-desc {
+        font-size: 0.875rem;
+    }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 480px) {
+    .app-container {
+        padding: 0.75rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.125rem;
+    }
+
+    /* Stats Grid - Stack on very small screens */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        padding: 0.875rem;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+    }
+
+    /* Task Input */
+    .task-input-form {
+        padding: 0.875rem;
+    }
+
+    .main-input {
+        font-size: 0.9375rem;
+    }
+
+    /* Task Item */
+    .task-item {
+        padding: 0.875rem;
+    }
+
+    .task-text {
+        font-size: 0.9375rem;
+    }
+
+    .task-description {
+        font-size: 0.875rem;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+    }
+
+    .btn-icon {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+    }
+
+    /* Modal */
+    .modal-card {
+        margin: 0.5rem;
+    }
+
+    .modal-header h2 {
+        font-size: 1.125rem;
+    }
+}
+
+/* Touch-Friendly Enhancements */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Increase touch targets */
+    .btn,
+    .btn-icon,
+    .checkbox,
+    .task-checkbox {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Remove hover effects on touch devices */
+    .task-item:hover .task-actions {
+        opacity: 1;
+    }
+
+    .task-item:hover .delete-btn {
+        opacity: 1;
+    }
+
+    /* Make all interactive elements more visible on touch */
+    .task-actions {
+        opacity: 1;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+    .app-container {
+        padding: 1rem 2rem;
+    }
+
+    header {
+        flex-direction: row;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

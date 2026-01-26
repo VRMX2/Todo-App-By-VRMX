@@ -52,7 +52,8 @@ export default function Auth() {
             minHeight: '100vh',
             background: 'var(--bg-main)',
             position: 'relative',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            flexDirection: window.innerWidth <= 768 ? 'column' : 'row'
         }}>
             {/* 3D Animated Background */}
             <div style={{
@@ -111,8 +112,8 @@ export default function Auth() {
 
             {/* Left Side - 3D Branding */}
             <div style={{
-                flex: 1,
-                display: 'flex',
+                flex: window.innerWidth <= 768 ? 'none' : 1,
+                display: window.innerWidth <= 768 ? 'none' : 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 padding: '4rem',
@@ -237,9 +238,10 @@ export default function Auth() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '2rem',
+                padding: window.innerWidth <= 768 ? '1.5rem' : '2rem',
                 position: 'relative',
-                zIndex: 1
+                zIndex: 1,
+                minHeight: window.innerWidth <= 768 ? '100vh' : 'auto'
             }}>
                 <motion.div
                     initial={{ opacity: 0, y: 30, rotateX: 10 }}
@@ -247,12 +249,12 @@ export default function Auth() {
                     transition={{ duration: 0.8, delay: 0.2 }}
                     style={{
                         width: '100%',
-                        maxWidth: '480px',
-                        padding: '3.5rem',
+                        maxWidth: window.innerWidth <= 768 ? '100%' : '480px',
+                        padding: window.innerWidth <= 768 ? '2rem' : '3.5rem',
                         background: 'var(--glass-bg)',
                         backdropFilter: 'blur(30px)',
                         border: '1px solid var(--glass-border)',
-                        borderRadius: '32px',
+                        borderRadius: window.innerWidth <= 768 ? '24px' : '32px',
                         boxShadow: '0 30px 90px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
                         transform: 'perspective(1000px)',
                         position: 'relative'
@@ -268,12 +270,12 @@ export default function Auth() {
                         filter: 'blur(20px)'
                     }} />
 
-                    <div style={{ marginBottom: '2.5rem' }}>
+                    <div style={{ marginBottom: window.innerWidth <= 768 ? '1.5rem' : '2.5rem' }}>
                         <motion.h2
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             style={{
-                                fontSize: '2.25rem',
+                                fontSize: window.innerWidth <= 768 ? '1.75rem' : '2.25rem',
                                 fontWeight: '800',
                                 marginBottom: '0.75rem',
                                 background: 'linear-gradient(135deg, var(--text-main), var(--primary))',
@@ -283,7 +285,7 @@ export default function Auth() {
                         >
                             {isReset ? 'Reset Password' : (isLogin ? 'Welcome Back' : 'Get Started')}
                         </motion.h2>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', lineHeight: '1.5' }}>
+                        <p style={{ color: 'var(--text-muted)', fontSize: window.innerWidth <= 768 ? '0.875rem' : '0.9375rem', lineHeight: '1.5' }}>
                             {isReset ? 'Enter your email to receive a reset link' : (isLogin ? 'Sign in to access your workspace' : 'Create your account in seconds')}
                         </p>
                     </div>
@@ -295,19 +297,19 @@ export default function Auth() {
                         onClick={handleGoogleLogin}
                         style={{
                             width: '100%',
-                            padding: '1rem',
+                            padding: window.innerWidth <= 768 ? '0.875rem' : '1rem',
                             background: 'linear-gradient(135deg, #ffffff, #f8f9fa)',
                             color: '#1f2937',
                             border: 'none',
                             borderRadius: '16px',
-                            fontSize: '1rem',
+                            fontSize: window.innerWidth <= 768 ? '0.9375rem' : '1rem',
                             fontWeight: '600',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '0.875rem',
                             cursor: 'pointer',
-                            marginBottom: '2rem',
+                            marginBottom: window.innerWidth <= 768 ? '1.5rem' : '2rem',
                             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05)',
                             transition: 'all 0.3s'
                         }}
