@@ -30,6 +30,7 @@ import LanguageSwitcher from './components/LanguageSwitcher';
 import MobileBottomNav from './components/MobileBottomNav';
 import MobileHeader from './components/MobileHeader';
 import MobileTaskCard from './components/MobileTaskCard';
+import MobileStats from './components/MobileStats';
 import { isMobileDevice } from './utils/deviceDetection';
 import './index.css'
 
@@ -481,9 +482,7 @@ function App() {
                     )}
 
                     {mobileTab === 'dashboard' && (
-                        <div style={{ padding: '0 16px' }}>
-                            <Dashboard tasks={tasks.filter(t => t.status !== 'deleted')} />
-                        </div>
+                        <MobileStats tasks={tasks.filter(t => t.status !== 'deleted')} />
                     )}
 
                     {mobileTab === 'history' && (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { Trash2, Check, Calendar, Tag, AlertCircle } from 'lucide-react';
+import { Trash2, Check, Calendar, Tag, AlertCircle, Edit2 } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function MobileTaskCard({ task, onToggle, onDelete, onUpdate }) {
@@ -20,7 +20,9 @@ export default function MobileTaskCard({ task, onToggle, onDelete, onUpdate }) {
             onToggle(task.id);
         } else if (info.offset.x < -100) {
             // Swiped left - delete
-            onDelete(task.id);
+            if (confirm('Delete this task?')) {
+                onDelete(task.id);
+            }
         }
         x.set(0);
     };
@@ -186,6 +188,32 @@ export default function MobileTaskCard({ task, onToggle, onDelete, onUpdate }) {
                             </motion.div>
                         )}
                     </div>
+
+                    {/* Delete button - always visible */}
+                    <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm('Delete this task?')) {
+                                onDelete(task.id);
+                            }
+                        }}
+                        style={{
+                            width: '36px',
+                            height: '36px',
+                            minWidth: '36px',
+                            borderRadius: '12px',
+                            background: 'rgba(239, 68, 68, 0.1)',
+                            border: 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        <Trash2 size={18} color="#ef4444" strokeWidth={2} />
+                    </motion.button>
                 </div>
             </motion.div>
         </motion.div>
