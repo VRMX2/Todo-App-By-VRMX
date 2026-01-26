@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Sun, Moon, CheckSquare, LogOut, User as UserIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import './i18n';
+import { Sun, Moon, CheckSquare, LogOut, User as UserIcon, History } from 'lucide-react';
 import { addDays, addWeeks, addMonths } from 'date-fns';
 import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -22,13 +24,17 @@ import Auth from './components/Auth';
 import SearchBar from './components/SearchBar';
 import FilterPanel from './components/FilterPanel';
 import Profile from './components/Profile';
+import HistoryView from './components/HistoryView';
+import LanguageSwitcher from './components/LanguageSwitcher';
 import './index.css'
 
 function App() {
+    const { t, i18n } = useTranslation();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [tasks, setTasks] = useState([]);
     const [showProfile, setShowProfile] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
 
     // Search and Filter State
     const [searchQuery, setSearchQuery] = useState('');
@@ -83,6 +89,12 @@ function App() {
 
         return () => unsubscribe();
     }, []);
+
+    // Set direction based on language on mount/update
+    useEffect(() => {
+        document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = i18n.language;
+    }, [i18n.language]);
 
     // Firestore Task Listener
     useEffect(() => {
@@ -222,12 +234,45 @@ function App() {
     };
 
     const deleteTask = async (id) => {
-        await deleteDoc(doc(db, 'tasks', id));
+        // Soft delete
+        try {
+            await updateDoc(doc(db, 'tasks', id), {
+                status: 'deleted',
+                deletedAt: serverTimestamp(),
+                completed: true // Treat as completed for some logic, or just use status
+            });
+            console.log('Task soft deleted');
+        } catch (error) {
+            console.error('Error deleting task:', error);
+            alert('Failed to delete task: ' + error.message);
+        }
+    };
+
+    const restoreTask = async (id) => {
+        try {
+            await updateDoc(doc(db, 'tasks', id), {
+                status: 'pending',
+                completed: false,
+                deletedAt: null
+            });
+            console.log('Task restored');
+        } catch (error) {
+            console.error('Error restoring task:', error);
+        }
+    };
+
+    const permanentDeleteTask = async (id) => {
+        try {
+            await deleteDoc(doc(db, 'tasks', id));
+            console.log('Task permanently deleted');
+        } catch (error) {
+            console.error('Error deleting task permanently:', error);
+        }
     };
 
     // Filter and Sort Tasks
     const getFilteredAndSortedTasks = () => {
-        let filtered = [...tasks];
+        let filtered = tasks.filter(t => t.status !== 'deleted'); // Exclude deleted tasks from main view
 
         // Search filter
         if (searchQuery) {
@@ -307,9 +352,9 @@ function App() {
                         <CheckSquare size={24} />
                     </div>
                     <div>
-                        <h2 style={{ fontSize: '1.25rem', margin: 0 }}>TaskVrmx</h2>
+                        <h2 style={{ fontSize: '1.25rem', margin: 0 }}>{t('app_title')}</h2>
                         <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-                            Welcome, {user.displayName || user.email.split('@')[0]}
+                            {t('welcome', { name: user.displayName || user.email.split('@')[0] })}
                         </span>
                     </div>
                     {showNotificationBtn && (
@@ -318,11 +363,20 @@ function App() {
                             className="btn"
                             style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', marginLeft: '1rem', background: 'rgba(249, 115, 22, 0.1)', color: 'var(--primary)' }}
                         >
-                            Enable Alerts 🔔
+                            {t('enable_alerts')}
                         </button>
                     )}
                 </div>
                 <div className="flex items-center gap-4">
+                    <LanguageSwitcher />
+                    <button
+                        onClick={() => setShowHistory(true)}
+                        className="btn"
+                        style={{ padding: '0.5rem', background: 'transparent', color: 'var(--text-muted)' }}
+                        title={t('history_title')}
+                    >
+                        <History size={20} />
+                    </button>
                     <button
                         onClick={() => setShowProfile(true)}
                         className="btn"
@@ -339,7 +393,7 @@ function App() {
                         onClick={toggleTheme}
                         className="btn"
                         style={{ padding: '0.5rem', background: 'transparent', color: 'var(--text-muted)' }}
-                        aria-label="Toggle theme"
+                        aria-label={t('theme_toggle')}
                     >
                         {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                     </button>
@@ -349,7 +403,7 @@ function App() {
                         className="btn"
                         style={{ padding: '0.5rem', background: 'transparent', color: 'var(--text-muted)' }}
                         aria-label="Sign out"
-                        title="Sign Out"
+                        title={t('sign_out')}
                     >
                         <LogOut size={20} />
                     </button>
@@ -363,23 +417,34 @@ function App() {
             )}
 
             <section className="mb-4">
-                <h1>Good morning, what will you accomplish today?</h1>
-                <p className="subtitle">You have {tasks.filter(t => !t.completed).length} active tasks remaining</p>
+                <h1>{t('good_morning')}</h1>
+                <p className="subtitle">{t('active_tasks_count', { count: tasks.filter(t => !t.completed).length })}</p>
             </section>
 
-            <Dashboard tasks={tasks} />
+            {showHistory ? (
+                <HistoryView
+                    tasks={tasks}
+                    onRestore={restoreTask}
+                    onDeleteForever={permanentDeleteTask}
+                    onBack={() => setShowHistory(false)}
+                />
+            ) : (
+                <>
+                    <Dashboard tasks={tasks.filter(t => t.status !== 'deleted')} />
 
-            <TaskInput onAdd={addTask} />
+                    <TaskInput onAdd={addTask} />
 
-            <TaskList
-                tasks={tasks}
-                onToggle={toggleTask}
-                onDelete={deleteTask}
-                onUpdate={updateTask}
-            />
+                    <TaskList
+                        tasks={filteredTasks}
+                        onToggle={toggleTask}
+                        onDelete={deleteTask}
+                        onUpdate={updateTask}
+                    />
+                </>
+            )}
 
             <footer style={{ textAlign: 'center', marginTop: '4rem', color: '#9ca3af', fontSize: '0.875rem' }}>
-                Built with simplicity in mind
+                {t('footer_text')}
             </footer>
         </div>
     )

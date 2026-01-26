@@ -21,7 +21,10 @@ TaskVrmx is a modern Todo application designed to make productivity fun and enga
 - **⚡ Efficient Task Management**
   - **Rich Filtering**: Easily view All, Active, or Completed tasks.
   - **Priority Levels**: Mark tasks as High, Medium, or Low priority.
+  - **Priority Levels**: Mark tasks as High, Medium, or Low priority.
   - **Due Dates**: Never miss a deadline with integrated date pickers.
+  - **Task History**: View completed tasks and restore deleted ones from the Trash.
+  - **Internationalization (i18n)**: Full support for English (LTR) and Arabic (RTL).
 
 - **🎨 Modern UI/UX**
   - **Glassmorphism Design**: sleek, translucent interfaces.
@@ -38,6 +41,7 @@ This project is built with a powerful modern stack:
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Backend / Auth**: [Firebase](https://firebase.google.com/) (Firestore & Auth)
 - **Date Handling**: [date-fns](https://date-fns.org/)
+- **i18n**: [i18next](https://www.i18next.com/)
 
 ## 🚀 Getting Started
 

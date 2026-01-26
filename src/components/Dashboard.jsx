@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Target, CheckCircle, Clock, PieChart, Flame } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { calculateStreak, getAISuggestion } from '../utils/gamification';
 
 export default function Dashboard({ tasks }) {
+    const { t } = useTranslation();
     const total = tasks.length;
     const completed = tasks.filter(t => t.completed).length;
     const active = total - completed;
@@ -44,20 +46,20 @@ export default function Dashboard({ tasks }) {
                 animate="show"
             >
                 <StatCard
-                    label="Total Tasks"
+                    label={t('total_tasks')}
                     value={total}
                     icon={Target}
                     delay={0}
                 />
                 <StatCard
-                    label="Completed"
+                    label={t('completed')}
                     value={completed}
                     icon={CheckCircle}
                     delay={0.1}
                 />
                 <div className="stat-card glass-card">
                     <div>
-                        <div className="stat-label">Progress</div>
+                        <div className="stat-label">{t('progress')}</div>
                         <div className="stat-value">{progress}%</div>
                         <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', marginTop: '0.5rem', overflow: 'hidden' }}>
                             <motion.div
@@ -76,17 +78,17 @@ export default function Dashboard({ tasks }) {
                     </motion.div>
                 </div>
                 <StatCard
-                    label="Points"
+                    label={t('points')}
                     value={points}
                     icon={Flame}
-                    subtext="Keep grinding!"
+                    subtext={t('keep_grinding')}
                     delay={0.4}
                 />
                 <StatCard
-                    label="Day Streak"
+                    label={t('day_streak')}
                     value={streak}
                     icon={Flame}
-                    subtext={streak > 0 ? "🔥 You're on fire!" : "Start a streak today!"}
+                    subtext={streak > 0 ? t('streak_fire') : t('start_streak')}
                     delay={0.5}
                 />
             </motion.div>

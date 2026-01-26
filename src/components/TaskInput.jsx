@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function TaskInput({ onAdd }) {
+    const { t } = useTranslation();
     const [text, setText] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('Work');
@@ -38,7 +40,7 @@ export default function TaskInput({ onAdd }) {
                 <input
                     type="text"
                     className="main-input"
-                    placeholder="What needs to be done?"
+                    placeholder={t('add_task_placeholder')}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     onFocus={() => setIsExpanded(true)}
@@ -49,7 +51,7 @@ export default function TaskInput({ onAdd }) {
                         className="btn btn-primary"
                         disabled={!text.trim()}
                     >
-                        Add
+                        {t('add_btn')}
                     </button>
                 )}
             </div>
@@ -57,7 +59,7 @@ export default function TaskInput({ onAdd }) {
             <div className={`input-details ${isExpanded ? 'show' : ''}`}>
                 <textarea
                     className="description-input"
-                    placeholder="Add a description (optional)"
+                    placeholder={t('description')}
                     rows="2"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -65,51 +67,51 @@ export default function TaskInput({ onAdd }) {
 
                 <div className="input-grid">
                     <div className="input-field">
-                        <label>Category</label>
+                        <label>{t('category_label')}</label>
                         <select
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                         >
-                            <option value="Work">Work</option>
-                            <option value="Study">Study</option>
-                            <option value="Personal">Personal</option>
-                            <option value="Health">Health</option>
+                            <option value="Work">{t('cat_work')}</option>
+                            <option value="Study">{t('cat_study')}</option>
+                            <option value="Personal">{t('cat_personal')}</option>
+                            <option value="Health">{t('cat_health')}</option>
                         </select>
                     </div>
 
                     <div className="input-field">
-                        <label>Priority</label>
+                        <label>{t('priority_label')}</label>
                         <select
                             value={priority}
                             onChange={(e) => setPriority(e.target.value)}
                         >
-                            <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
-                            <option value="High">High</option>
+                            <option value="Low">{t('priority_low')}</option>
+                            <option value="Medium">{t('priority_medium')}</option>
+                            <option value="High">{t('priority_high')}</option>
                         </select>
                     </div>
 
                     <div className="input-field">
-                        <label>Due Date</label>
+                        <label>{t('due_date_label')}</label>
                         <DatePicker
                             selected={dueDate}
                             onChange={(date) => setDueDate(date)}
-                            placeholderText="Select date"
+                            placeholderText={t('due_date')}
                             dateFormat="MMM d"
                             minDate={new Date()}
                         />
                     </div>
 
                     <div className="input-field">
-                        <label>Repeat</label>
+                        <label>{t('repeat_label')}</label>
                         <select
                             value={recurrence}
                             onChange={(e) => setRecurrence(e.target.value)}
                         >
-                            <option value="none">No Repeat</option>
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
+                            <option value="none">{t('no_repeat')}</option>
+                            <option value="daily">{t('recurring_daily')}</option>
+                            <option value="weekly">{t('recurring_weekly')}</option>
+                            <option value="monthly">{t('recurring_monthly')}</option>
                         </select>
                     </div>
                 </div>
@@ -120,14 +122,14 @@ export default function TaskInput({ onAdd }) {
                         onClick={() => setIsExpanded(false)}
                         className="btn-text"
                     >
-                        Cancel
+                        {t('cancel')}
                     </button>
                     <button
                         type="submit"
                         className="btn btn-primary"
                     >
                         <Plus size={18} style={{ marginRight: '0.5rem' }} />
-                        Add Task
+                        {t('add_btn')}
                     </button>
                 </div>
             </div>

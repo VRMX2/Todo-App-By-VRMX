@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Trash2, Check, Edit2, Save, X, Calendar, Repeat } from 'lucide-react';
 import { motion } from 'framer-motion';
 import DatePicker from 'react-datepicker';
@@ -6,6 +7,7 @@ import { format } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
 
 export default function TaskItem({ task, onToggle, onDelete, onUpdate }) {
+    const { t } = useTranslation();
     const [isEditing, setIsEditing] = useState(false);
     const [editedTask, setEditedTask] = useState({
         text: task.text,
@@ -39,18 +41,18 @@ export default function TaskItem({ task, onToggle, onDelete, onUpdate }) {
 
     const getPriorityBadge = (priority) => {
         const badges = {
-            low: { emoji: '🟢', label: 'Low', color: '#10b981' },
-            medium: { emoji: '🟡', label: 'Medium', color: '#f59e0b' },
-            high: { emoji: '🔴', label: 'High', color: '#ef4444' }
+            low: { emoji: '🟢', label: t('priority_low'), color: '#10b981' },
+            medium: { emoji: '🟡', label: t('priority_medium'), color: '#f59e0b' },
+            high: { emoji: '🔴', label: t('priority_high'), color: '#ef4444' }
         };
         return badges[priority] || badges.medium;
     };
 
     const getStatusBadge = (status) => {
         const badges = {
-            pending: { emoji: '🕒', label: 'Pending', color: '#6b7280' },
-            'in-progress': { emoji: '🔄', label: 'In Progress', color: '#3b82f6' },
-            completed: { emoji: '✅', label: 'Completed', color: '#10b981' }
+            pending: { emoji: '🕒', label: t('filter_pending'), color: '#6b7280' },
+            'in-progress': { emoji: '🔄', label: t('filter_in_progress'), color: '#3b82f6' },
+            completed: { emoji: '✅', label: t('filter_completed'), color: '#10b981' }
         };
         return badges[status] || badges.pending;
     };
@@ -82,44 +84,44 @@ export default function TaskItem({ task, onToggle, onDelete, onUpdate }) {
                         value={editedTask.text}
                         onChange={(e) => setEditedTask({ ...editedTask, text: e.target.value })}
                         className="edit-input-title"
-                        placeholder="Task title"
+                        placeholder={t('task_title')}
                     />
                     <textarea
                         value={editedTask.description}
                         onChange={(e) => setEditedTask({ ...editedTask, description: e.target.value })}
                         className="edit-input-desc"
-                        placeholder="Description (optional)"
+                        placeholder={t('description')}
                         rows="2"
                     />
                     <div className="edit-grid">
                         <div className="input-field">
-                            <label>Priority</label>
+                            <label>{t('priority_label')}</label>
                             <select
                                 value={editedTask.priority}
                                 onChange={(e) => setEditedTask({ ...editedTask, priority: e.target.value })}
                             >
-                                <option value="low">🟢 Low Priority</option>
-                                <option value="medium">🟡 Medium Priority</option>
-                                <option value="high">🔴 High Priority</option>
+                                <option value="low">🟢 {t('priority_low')}</option>
+                                <option value="medium">🟡 {t('priority_medium')}</option>
+                                <option value="high">🔴 {t('priority_high')}</option>
                             </select>
                         </div>
                         <div className="input-field">
-                            <label>Status</label>
+                            <label>{t('filter_status') || 'Status'}</label>
                             <select
                                 value={editedTask.status}
                                 onChange={(e) => setEditedTask({ ...editedTask, status: e.target.value })}
                             >
-                                <option value="pending">🕒 Pending</option>
-                                <option value="in-progress">🔄 In Progress</option>
-                                <option value="completed">✅ Completed</option>
+                                <option value="pending">🕒 {t('filter_pending')}</option>
+                                <option value="in-progress">🔄 {t('filter_in_progress')}</option>
+                                <option value="completed">✅ {t('filter_completed')}</option>
                             </select>
                         </div>
                         <div className="input-field">
-                            <label>Due Date</label>
+                            <label>{t('due_date_label')}</label>
                             <DatePicker
                                 selected={editedTask.dueDate}
                                 onChange={(date) => setEditedTask({ ...editedTask, dueDate: date })}
-                                placeholderText="Due date"
+                                placeholderText={t('due_date')}
                                 dateFormat="MMM d, yyyy"
                                 isClearable
                             />
@@ -130,13 +132,13 @@ export default function TaskItem({ task, onToggle, onDelete, onUpdate }) {
                             onClick={handleCancel}
                             className="btn-text"
                         >
-                            Cancel
+                            {t('cancel')}
                         </button>
                         <button
                             onClick={handleSave}
                             className="btn btn-primary"
                         >
-                            <Save size={16} style={{ marginRight: '0.5rem' }} /> Save
+                            <Save size={16} style={{ marginRight: '0.5rem' }} /> {t('save')}
                         </button>
                     </div>
                 </div>
@@ -174,8 +176,8 @@ export default function TaskItem({ task, onToggle, onDelete, onUpdate }) {
                                 <div className={`task-due-date ${overdue ? 'overdue-text' : ''}`}>
                                     <Calendar size={14} />
                                     <span>
-                                        Due: {format(task.dueDate.toDate ? task.dueDate.toDate() : new Date(task.dueDate), 'MMM d, yyyy')}
-                                        {overdue && ' (Overdue!)'}
+                                        {t('due_prefix')} {format(task.dueDate.toDate ? task.dueDate.toDate() : new Date(task.dueDate), 'MMM d, yyyy')}
+                                        {overdue && ` (${t('overdue')})`}
                                     </span>
                                 </div>
                             )}

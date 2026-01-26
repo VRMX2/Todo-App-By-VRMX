@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 
 export default function FilterPanel({
@@ -11,41 +12,73 @@ export default function FilterPanel({
     sortBy,
     onSortChange
 }) {
+    const { t } = useTranslation();
     const categories = ['All', 'Work', 'Study', 'Personal', 'Health'];
     const priorities = ['All', 'Low', 'Medium', 'High'];
     const statuses = ['All', 'Pending', 'In Progress', 'Completed'];
     const sortOptions = [
-        { value: 'createdAt-desc', label: 'Newest First' },
-        { value: 'createdAt-asc', label: 'Oldest First' },
-        { value: 'dueDate-asc', label: 'Due Date (Earliest)' },
-        { value: 'dueDate-desc', label: 'Due Date (Latest)' },
-        { value: 'priority-desc', label: 'Priority (High to Low)' },
-        { value: 'priority-asc', label: 'Priority (Low to High)' }
+        { value: 'createdAt-desc', label: t('sort_newest_first') },
+        { value: 'createdAt-asc', label: t('sort_oldest_first') },
+        { value: 'dueDate-asc', label: t('sort_due_date_earliest') },
+        { value: 'dueDate-desc', label: t('sort_due_date_latest') },
+        { value: 'priority-desc', label: t('sort_priority_high') },
+        { value: 'priority-asc', label: t('sort_priority_low') }
     ];
+
+    const getCategoryLabel = (cat) => {
+        const map = {
+            'All': t('cat_all'),
+            'Work': t('cat_work_filter'),
+            'Study': t('cat_study_filter'),
+            'Personal': t('cat_personal_filter'),
+            'Health': t('cat_health_filter')
+        };
+        return map[cat] || cat;
+    };
+
+    const getStatusLabel = (status) => {
+        const map = {
+            'All': t('filter_all'),
+            'Pending': t('filter_pending'),
+            'In Progress': t('filter_in_progress'),
+            'Completed': t('filter_completed')
+        };
+        return map[status] || status;
+    };
+
+    const getPriorityLabel = (pri) => {
+        const map = {
+            'All': t('filter_all'),
+            'Low': t('priority_low'),
+            'Medium': t('priority_medium'),
+            'High': t('priority_high')
+        };
+        return map[pri] || pri;
+    };
 
     return (
         <div className="filter-panel">
             <div className="filter-header">
                 <SlidersHorizontal size={18} />
-                <span>Filters & Sorting</span>
+                <span>{t('filter_title')}</span>
             </div>
 
             <div className="filter-grid">
                 <div className="filter-group">
-                    <label className="filter-label">Category</label>
+                    <label className="filter-label">{t('category_label')}</label>
                     <select
                         value={selectedCategory}
                         onChange={(e) => onCategoryChange(e.target.value)}
                         className="filter-select"
                     >
                         {categories.map(cat => (
-                            <option key={cat} value={cat}>{cat}</option>
+                            <option key={cat} value={cat}>{getCategoryLabel(cat)}</option>
                         ))}
                     </select>
                 </div>
 
                 <div className="filter-group">
-                    <label className="filter-label">Priority</label>
+                    <label className="filter-label">{t('priority_label')}</label>
                     <select
                         value={selectedPriority}
                         onChange={(e) => onPriorityChange(e.target.value)}
@@ -56,14 +89,14 @@ export default function FilterPanel({
                                 {pri === 'Low' && '🟢 '}
                                 {pri === 'Medium' && '🟡 '}
                                 {pri === 'High' && '🔴 '}
-                                {pri}
+                                {getPriorityLabel(pri)}
                             </option>
                         ))}
                     </select>
                 </div>
 
                 <div className="filter-group">
-                    <label className="filter-label">Status</label>
+                    <label className="filter-label">{t('filter_status_label')}</label>
                     <select
                         value={selectedStatus}
                         onChange={(e) => onStatusChange(e.target.value)}
@@ -74,7 +107,7 @@ export default function FilterPanel({
                                 {status === 'Pending' && '🕒 '}
                                 {status === 'In Progress' && '🔄 '}
                                 {status === 'Completed' && '✅ '}
-                                {status}
+                                {getStatusLabel(status)}
                             </option>
                         ))}
                     </select>
@@ -82,7 +115,7 @@ export default function FilterPanel({
 
                 <div className="filter-group">
                     <label className="filter-label">
-                        <ArrowUpDown size={14} /> Sort By
+                        <ArrowUpDown size={14} /> {t('sort_by')}
                     </label>
                     <select
                         value={sortBy}
