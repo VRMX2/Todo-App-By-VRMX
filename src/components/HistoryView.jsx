@@ -6,86 +6,127 @@ import { format } from 'date-fns';
 
 export default function HistoryView({ tasks, onRestore, onDeleteForever, onBack }) {
     const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState('completed'); // 'completed' | 'trash'
+    const [activeTab, setActiveTab] = useState('completed');
 
     const completedTasks = tasks.filter(t => t.status === 'completed' || (t.completed && t.status !== 'deleted'));
     const deletedTasks = tasks.filter(t => t.status === 'deleted');
-
     const displayTasks = activeTab === 'completed' ? completedTasks : deletedTasks;
 
     return (
-        <div className="history-view">
-            <div className="flex items-center gap-4 mb-6">
+        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1rem' }}>
+            {/* Simple Header with Back Button */}
+            <div style={{ marginBottom: '2rem' }}>
                 <button
                     onClick={onBack}
-                    className="btn btn-primary flex items-center gap-2"
-                    title={t('back_to_dashboard')}
+                    className="btn btn-primary"
+                    style={{ marginBottom: '1.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
                 >
-                    <ArrowLeft size={20} />
-                    <span>{t('back_to_dashboard')}</span>
+                    <ArrowLeft size={18} />
+                    {t('back_to_dashboard')}
                 </button>
-                <div style={{ flex: 1 }}></div> {/* Spacer to push title if needed, or just let it sit next to button */}
-                <h2 className="text-xl font-bold">{t('history_title')}</h2>
+
+                <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+                    {t('history_title')}
+                </h1>
             </div>
 
-            <div className="tabs mb-6 flex gap-4 border-b border-gray-200 dark:border-gray-700">
+            {/* Clean Tab Switcher */}
+            <div className="filter-tabs" style={{ marginBottom: '2rem' }}>
                 <button
-                    className={`pb-2 px-4 ${activeTab === 'completed' ? 'border-b-2 border-primary font-bold text-primary' : 'text-gray-500'}`}
+                    className={`filter-tab ${activeTab === 'completed' ? 'active' : ''}`}
                     onClick={() => setActiveTab('completed')}
                 >
+                    <Check size={16} style={{ marginRight: '0.5rem' }} />
                     {t('btn_completed')} ({completedTasks.length})
                 </button>
                 <button
-                    className={`pb-2 px-4 ${activeTab === 'trash' ? 'border-b-2 border-red-500 font-bold text-red-500' : 'text-gray-500'}`}
+                    className={`filter-tab ${activeTab === 'trash' ? 'active' : ''}`}
                     onClick={() => setActiveTab('trash')}
                 >
+                    <Trash2 size={16} style={{ marginRight: '0.5rem' }} />
                     {t('btn_trash')} ({deletedTasks.length})
                 </button>
             </div>
 
-            <div className="history-list space-y-4">
-                <AnimatePresence>
+            {/* Task List */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <AnimatePresence mode="wait">
                     {displayTasks.length === 0 ? (
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="text-center text-gray-500 py-10"
+                            exit={{ opacity: 0 }}
+                            className="glass-card"
+                            style={{ padding: '3rem', textAlign: 'center' }}
                         >
-                            {activeTab === 'completed' ? t('empty_history') : t('empty_trash')}
+                            <div style={{ opacity: 0.5, marginBottom: '1rem' }}>
+                                {activeTab === 'completed' ? <Check size={48} /> : <Trash2 size={48} />}
+                            </div>
+                            <p style={{ color: 'var(--text-muted)' }}>
+                                {activeTab === 'completed' ? t('empty_history') : t('empty_trash')}
+                            </p>
                         </motion.div>
                     ) : (
-                        displayTasks.map(task => (
+                        displayTasks.map((task, index) => (
                             <motion.div
                                 key={task.id}
-                                layout
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                className={`glass-card p-4 flex justify-between items-center ${activeTab === 'trash' ? 'opacity-75' : ''}`}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ delay: index * 0.03 }}
+                                className="glass-card task-item"
+                                style={{
+                                    padding: '1.25rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '1rem',
+                                    borderLeft: activeTab === 'completed' ? '4px solid #10b981' : '4px solid #ef4444'
+                                }}
                             >
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        {activeTab === 'completed' && <Check size={16} className="text-green-500" />}
-                                        <h3 className={`font-medium ${activeTab === 'completed' ? 'line-through text-gray-500' : ''}`}>
-                                            {task.text}
-                                        </h3>
-                                    </div>
-                                    <div className="text-sm text-gray-500 mt-1 flex gap-4">
+                                {/* Icon */}
+                                <div style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    borderRadius: '50%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    background: activeTab === 'completed' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                                    color: activeTab === 'completed' ? '#10b981' : '#ef4444',
+                                    flexShrink: 0
+                                }}>
+                                    {activeTab === 'completed' ? <Check size={20} /> : <Trash2 size={20} />}
+                                </div>
+
+                                {/* Task Content */}
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <h3 style={{
+                                        fontSize: '1.1rem',
+                                        fontWeight: '600',
+                                        marginBottom: '0.5rem',
+                                        textDecoration: activeTab === 'completed' ? 'line-through' : 'none',
+                                        color: activeTab === 'completed' ? 'var(--text-muted)' : 'var(--text-main)'
+                                    }}>
+                                        {task.text}
+                                    </h3>
+                                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                                        <span className="task-category">{task.category}</span>
                                         {task.dueDate && (
-                                            <span className="flex items-center gap-1">
-                                                <Calendar size={12} />
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                                <Calendar size={14} />
                                                 {format(task.dueDate.toDate ? task.dueDate.toDate() : new Date(task.dueDate), 'MMM d, yyyy')}
                                             </span>
                                         )}
-                                        <span className="capitalize">{task.category}</span>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-2">
+                                {/* Actions */}
+                                <div className="task-actions" style={{ display: 'flex', gap: '0.5rem' }}>
                                     {activeTab === 'trash' && (
                                         <button
                                             onClick={() => onRestore(task.id)}
-                                            className="btn btn-icon text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                                            className="btn-icon"
+                                            style={{ color: '#3b82f6' }}
                                             title={t('restore_tooltip')}
                                         >
                                             <RotateCcw size={18} />
@@ -97,7 +138,7 @@ export default function HistoryView({ tasks, onRestore, onDeleteForever, onBack 
                                                 onDeleteForever(task.id);
                                             }
                                         }}
-                                        className="btn btn-icon text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                        className="btn-icon delete"
                                         title={t('delete_forever_tooltip')}
                                     >
                                         <Trash2 size={18} />

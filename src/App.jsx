@@ -416,11 +416,6 @@ function App() {
                 <Profile user={user} onClose={() => setShowProfile(false)} />
             )}
 
-            <section className="mb-4">
-                <h1>{t('good_morning')}</h1>
-                <p className="subtitle">{t('active_tasks_count', { count: tasks.filter(t => !t.completed).length })}</p>
-            </section>
-
             {showHistory ? (
                 <HistoryView
                     tasks={tasks}
@@ -430,6 +425,11 @@ function App() {
                 />
             ) : (
                 <>
+                    <section className="mb-4">
+                        <h1>{t('good_morning')}</h1>
+                        <p className="subtitle">{t('active_tasks_count', { count: tasks.filter(t => !t.completed).length })}</p>
+                    </section>
+
                     <Dashboard tasks={tasks.filter(t => t.status !== 'deleted')} />
 
                     <TaskInput onAdd={addTask} />
