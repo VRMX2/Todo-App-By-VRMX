@@ -27,6 +27,10 @@ import Profile from './components/Profile';
 import HistoryView from './components/HistoryView';
 import QuickFilter from './components/QuickFilter';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import MobileBottomNav from './components/MobileBottomNav';
+import MobileHeader from './components/MobileHeader';
+import MobileTaskCard from './components/MobileTaskCard';
+import { isMobileDevice } from './utils/deviceDetection';
 import './index.css'
 
 function App() {
@@ -45,6 +49,11 @@ function App() {
     const [sortBy, setSortBy] = useState('createdAt-desc');
     const [quickFilter, setQuickFilter] = useState('all'); // 'all', 'today', 'week', 'completed'
 
+    // Mobile State
+    const [isMobile, setIsMobile] = useState(false);
+    const [mobileTab, setMobileTab] = useState('home');
+    const [showTaskInput, setShowTaskInput] = useState(false);
+
     // Theme State
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -60,6 +69,18 @@ function App() {
         root.classList.add(theme);
         localStorage.setItem('theme', theme);
     }, [theme]);
+
+    // Mobile Detection
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(isMobileDevice());
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     const toggleTheme = () => {
         setTheme(prev => prev === 'light' ? 'dark' : 'light');
@@ -373,6 +394,165 @@ function App() {
         return <Auth />;
     }
 
+    // Mobile Layout
+    if (isMobile) {
+        return (
+            <div style={{
+                minHeight: '100vh',
+                background: 'linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end))',
+                paddingBottom: '80px'
+            }}>
+                {/* Mobile Header */}
+                <MobileHeader
+                    user={user}
+                    onMenuClick={() => setShowProfile(true)}
+                    onNotificationClick={requestNotificationPermission}
+                />
+
+                {/* Mobile Content based on active tab */}
+                <div style={{ paddingTop: '8px' }}>
+                    {mobileTab === 'home' && (
+                        <>
+                            {/* Quick Stats Cards */}
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(2, 1fr)',
+                                gap: '12px',
+                                padding: '0 16px',
+                                marginBottom: '16px'
+                            }}>
+                                <div style={{
+                                    background: 'var(--glass-bg)',
+                                    backdropFilter: 'blur(16px)',
+                                    border: '1px solid var(--glass-border)',
+                                    borderRadius: '16px',
+                                    padding: '16px',
+                                    textAlign: 'center'
+                                }}>
+                                    <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--primary)' }}>
+                                        {tasks.filter(t => !t.completed && t.status !== 'deleted').length}
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                        Active
+                                    </div>
+                                </div>
+                                <div style={{
+                                    background: 'var(--glass-bg)',
+                                    backdropFilter: 'blur(16px)',
+                                    border: '1px solid var(--glass-border)',
+                                    borderRadius: '16px',
+                                    padding: '16px',
+                                    textAlign: 'center'
+                                }}>
+                                    <div style={{ fontSize: '28px', fontWeight: '800', color: '#10b981' }}>
+                                        {tasks.filter(t => t.completed).length}
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                        Done
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Tasks List */}
+                            <div>
+                                {filteredTasks.length === 0 ? (
+                                    <div style={{
+                                        textAlign: 'center',
+                                        padding: '40px 20px',
+                                        color: 'var(--text-muted)'
+                                    }}>
+                                        <div style={{ fontSize: '48px', marginBottom: '16px' }}>📝</div>
+                                        <div style={{ fontSize: '16px', fontWeight: '600' }}>No tasks yet</div>
+                                        <div style={{ fontSize: '14px', marginTop: '8px' }}>Tap the + button to add your first task</div>
+                                    </div>
+                                ) : (
+                                    filteredTasks.map(task => (
+                                        <MobileTaskCard
+                                            key={task.id}
+                                            task={task}
+                                            onToggle={toggleTask}
+                                            onDelete={deleteTask}
+                                            onUpdate={updateTask}
+                                        />
+                                    ))
+                                )}
+                            </div>
+                        </>
+                    )}
+
+                    {mobileTab === 'dashboard' && (
+                        <div style={{ padding: '0 16px' }}>
+                            <Dashboard tasks={tasks.filter(t => t.status !== 'deleted')} />
+                        </div>
+                    )}
+
+                    {mobileTab === 'history' && (
+                        <HistoryView
+                            tasks={tasks}
+                            onRestore={restoreTask}
+                            onDeleteForever={permanentDeleteTask}
+                            onBack={() => setMobileTab('home')}
+                        />
+                    )}
+
+                    {mobileTab === 'profile' && (
+                        <div style={{ padding: '16px' }}>
+                            <Profile user={user} onClose={() => setMobileTab('home')} />
+                        </div>
+                    )}
+                </div>
+
+                {/* Mobile Bottom Navigation */}
+                <MobileBottomNav
+                    activeTab={mobileTab}
+                    onTabChange={setMobileTab}
+                    onAddClick={() => setShowTaskInput(true)}
+                />
+
+                {/* Task Input Modal */}
+                {showTaskInput && (
+                    <div style={{
+                        position: 'fixed',
+                        inset: 0,
+                        background: 'rgba(0, 0, 0, 0.6)',
+                        backdropFilter: 'blur(8px)',
+                        zIndex: 2000,
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        justifyContent: 'center'
+                    }} onClick={() => setShowTaskInput(false)}>
+                        <div
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                width: '100%',
+                                maxHeight: '90vh',
+                                background: 'var(--glass-bg)',
+                                backdropFilter: 'blur(20px)',
+                                borderRadius: '24px 24px 0 0',
+                                padding: '24px',
+                                overflowY: 'auto'
+                            }}
+                        >
+                            <div style={{
+                                width: '40px',
+                                height: '4px',
+                                background: 'var(--text-muted)',
+                                borderRadius: '2px',
+                                margin: '0 auto 20px',
+                                opacity: 0.3
+                            }} />
+                            <TaskInput onAdd={(text, category, description, priority, dueDate, recurrence) => {
+                                addTask(text, category, description, priority, dueDate, recurrence);
+                                setShowTaskInput(false);
+                            }} />
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    // Desktop Layout (original)
     return (
         <div className="app-container">
             <header className="flex justify-between items-center mb-4">
