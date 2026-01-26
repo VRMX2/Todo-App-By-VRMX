@@ -25,6 +25,7 @@ import SearchBar from './components/SearchBar';
 import FilterPanel from './components/FilterPanel';
 import Profile from './components/Profile';
 import HistoryView from './components/HistoryView';
+import QuickFilter from './components/QuickFilter';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import './index.css'
 
@@ -42,6 +43,7 @@ function App() {
     const [selectedPriority, setSelectedPriority] = useState('All');
     const [selectedStatus, setSelectedStatus] = useState('All');
     const [sortBy, setSortBy] = useState('createdAt-desc');
+    const [quickFilter, setQuickFilter] = useState('all'); // 'all', 'today', 'week', 'completed'
 
     // Theme State
     const [theme, setTheme] = useState(() => {
@@ -274,6 +276,33 @@ function App() {
     const getFilteredAndSortedTasks = () => {
         let filtered = tasks.filter(t => t.status !== 'deleted'); // Exclude deleted tasks from main view
 
+        // Quick Filter Logic
+        if (quickFilter === 'today') {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            filtered = filtered.filter(task => {
+                if (!task.dueDate) return false;
+                const dueDate = task.dueDate.toDate ? task.dueDate.toDate() : new Date(task.dueDate);
+                return dueDate >= today && dueDate < tomorrow;
+            });
+        } else if (quickFilter === 'week') {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const weekEnd = new Date(today);
+            weekEnd.setDate(weekEnd.getDate() + 7);
+
+            filtered = filtered.filter(task => {
+                if (!task.dueDate) return false;
+                const dueDate = task.dueDate.toDate ? task.dueDate.toDate() : new Date(task.dueDate);
+                return dueDate >= today && dueDate < weekEnd;
+            });
+        } else if (quickFilter === 'completed') {
+            filtered = filtered.filter(task => task.completed || task.status === 'completed');
+        }
+
         // Search filter
         if (searchQuery) {
             filtered = filtered.filter(task =>
@@ -431,6 +460,13 @@ function App() {
                     </section>
 
                     <Dashboard tasks={tasks.filter(t => t.status !== 'deleted')} />
+
+                    <QuickFilter
+                        searchQuery={searchQuery}
+                        onSearchChange={setSearchQuery}
+                        activeFilter={quickFilter}
+                        onFilterChange={setQuickFilter}
+                    />
 
                     <TaskInput onAdd={addTask} />
 
