@@ -139,22 +139,22 @@ export default function Auth() {
                         style={{
                             width: '80px',
                             height: '80px',
-                            background: 'linear-gradient(135deg, #f97316, #ea580c)',
+                            background: 'linear-gradient(135deg, #ef4444, #dc2626)',
                             borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             marginBottom: '2rem',
-                            boxShadow: '0 20px 60px rgba(249, 115, 22, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                            boxShadow: '0 20px 60px rgba(239, 68, 68, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
                             transform: 'perspective(1000px)',
                             position: 'relative'
                         }}
                     >
-                        <CheckCircle2 size={40} color="white" strokeWidth={2.5} />
+                        <span style={{ fontSize: '40px', fontWeight: 'bold', color: 'white' }}>✚</span>
                         <div style={{
                             position: 'absolute',
                             inset: '-10px',
-                            background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.3), transparent)',
+                            background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.3), transparent)',
                             borderRadius: '25px',
                             filter: 'blur(20px)',
                             zIndex: -1
@@ -165,14 +165,14 @@ export default function Auth() {
                         fontSize: '4rem',
                         fontWeight: '900',
                         marginBottom: '1.5rem',
-                        background: 'linear-gradient(135deg, var(--text-main) 0%, var(--primary) 50%, var(--text-main) 100%)',
+                        background: 'linear-gradient(135deg, var(--text-main) 0%, #ef4444 50%, var(--text-main) 100%)',
                         backgroundSize: '200% 200%',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         letterSpacing: '-0.02em',
                         lineHeight: '1'
                     }}>
-                        TaskVrmx
+                        ENAC Medical
                     </h1>
 
                     <p style={{
@@ -182,15 +182,15 @@ export default function Auth() {
                         lineHeight: '1.7',
                         marginBottom: '3rem'
                     }}>
-                        Experience task management reimagined with cutting-edge design and seamless functionality.
+                        Professional medical management system for employee health tracking, consultations, and medical records.
                     </p>
 
                     {/* Feature Cards */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '500px' }}>
                         {[
-                            { icon: Sparkles, title: 'Smart Organization', desc: 'AI-powered task prioritization' },
-                            { icon: Shield, title: 'Secure & Private', desc: 'End-to-end encryption' },
-                            { icon: Zap, title: 'Lightning Fast', desc: 'Instant sync across devices' }
+                            { icon: CheckCircle2, title: 'Medical Records', desc: 'Secure digital patient files' },
+                            { icon: Shield, title: 'HIPAA Compliant', desc: 'Enterprise-grade security' },
+                            { icon: Zap, title: 'Efficient Workflow', desc: 'Streamlined appointment scheduling' }
                         ].map((feature, i) => (
                             <motion.div
                                 key={i}
@@ -213,14 +213,14 @@ export default function Auth() {
                                 <div style={{
                                     width: '48px',
                                     height: '48px',
-                                    background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.05))',
+                                    background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05))',
                                     borderRadius: '12px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     flexShrink: 0
                                 }}>
-                                    <feature.icon size={24} color="var(--primary)" />
+                                    <feature.icon size={24} color="#ef4444" />
                                 </div>
                                 <div>
                                     <div style={{ fontWeight: '600', marginBottom: '0.25rem', fontSize: '1rem' }}>{feature.title}</div>
